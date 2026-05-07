@@ -1,0 +1,1744 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compilore – Baza Wiedzy dla Firm B2B | AI dla Handlowców i Dystrybutorów</title>
+<meta name="description" content="Compilore to AI-powered baza wiedzy dla polskich firm B2B. Wgraj dokumenty, pytaj po polsku, dostań odpowiedź ze źródłem w 30 sekund. Wdrożenie AI w firmie zaczyna się tutaj.">
+<meta name="keywords" content="baza wiedzy dla firmy, zarządzanie wiedzą firmową, AI dla firm, wdrożenie AI w firmie, system wiedzy dla handlowców, narzędzia AI dla handlowców, baza wiedzy dla pracowników, drugi mózg dla firmy, AI B2B Polska">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://compilore.pl">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://compilore.pl">
+<meta property="og:title" content="Compilore – AI Baza Wiedzy dla Polskich Firm B2B">
+<meta property="og:description" content="Zamień dokumenty w bazę wiedzy. Pytaj po polsku, dostań odpowiedź ze źródłem w 30 sekund. Pierwsze wdrożenie AI które naprawdę działa.">
+<meta property="og:image" content="https://compilore.pl/og-image.png">
+<meta property="og:locale" content="pl_PL">
+<meta property="og:site_name" content="Compilore">
+
+<!-- Twitter/X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Compilore – AI Baza Wiedzy dla Firm B2B">
+<meta name="twitter:description" content="Zamień dokumenty w bazę wiedzy. Odpowiedź ze źródłem w 30 sekund.">
+<meta name="twitter:image" content="https://compilore.pl/og-image.png">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Compilore",
+  "applicationCategory": "BusinessApplication",
+  "description": "AI-powered baza wiedzy dla polskich firm B2B. Zarządzanie wiedzą firmową, wdrożenie AI, system wiedzy dla handlowców.",
+  "url": "https://compilore.pl",
+  "operatingSystem": "Web",
+  "offers": {
+    "@type": "Offer",
+    "price": "1000",
+    "priceCurrency": "PLN",
+    "priceSpecification": {
+      "@type": "UnitPriceSpecification",
+      "billingDuration": "P1M"
+    }
+  },
+  "provider": {
+    "@type": "Organization",
+    "name": "Headframe Spółka z ograniczoną odpowiedzialnością",
+    "url": "https://compilore.pl",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Stanisława Leszczyńskiego 4/77",
+      "addressLocality": "Wrocław",
+      "postalCode": "50-078",
+      "addressCountry": "PL"
+    }
+  }
+}
+</script>
+
+<!-- Performance -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root{
+  --bg:#050505;
+  --surface:#0D0D0D;
+  --elevated:#141414;
+  --border:#1A1A1A;
+  --border-hi:#2A2A2A;
+  --text:#F5F5F0;
+  --muted:#8A8A85;
+  --mono:#4A6A4A;
+  --shaft:#1E1E1E;
+  --green:#10B981;
+  --green-glow:#34D399;
+  --green-deep:#064E3B;
+  --red:#EF4444;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html{
+  scroll-behavior:smooth;
+  background:var(--bg);
+}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  font-weight:400;
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+#bgCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+
+/* ===== TYPE ===== */
+h1,h2{
+  font-family:'Archivo Black',sans-serif;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:-0.02em;
+  line-height:1.05;
+}
+.mono{
+  font-family:'JetBrains Mono',monospace;
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+}
+
+/* ===== SECTION BACKGROUNDS ===== */
+section{
+  background-color:#050505;
+  position:relative;
+  z-index:1;
+}
+section.alt{background-color:#0A0A0A;}
+section.surface{background-color:#0D0D0D;}
+footer{position:relative;z-index:1;}
+
+/* ===== SHAFT LINE ===== */
+.shaft{
+  position:fixed;
+  left:64px;
+  top:0;bottom:0;
+  width:1px;
+  background:linear-gradient(to bottom, transparent 0%, rgba(16,185,129,0.15) 20%, rgba(16,185,129,0.15) 80%, transparent 100%);
+  pointer-events:none;
+  z-index:5;
+}
+
+/* ===== NAV ===== */
+.nav{
+  position:fixed;
+  top:0;left:0;right:0;
+  height:64px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 32px;
+  background:rgba(5,5,5,0);
+  border-bottom:1px solid transparent;
+  z-index:30;
+  transition:background 0.2s, border-color 0.2s, backdrop-filter 0.2s;
+}
+.nav.scrolled{
+  background:rgba(5,5,5,0.97);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{height:36px;display:block;mix-blend-mode:screen;image-rendering:crisp-edges;}
+.nav-left{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.nav-brand{
+  font-family:'Archivo Black',sans-serif;
+  font-size:16px;
+  text-transform:uppercase;
+  letter-spacing:0.02em;
+  color:var(--text);
+  text-decoration:none;
+}
+.nav-tag{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+  color:var(--muted);
+}
+.nav-right{
+  display:flex;
+  align-items:center;
+  gap:28px;
+}
+.nav-link{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+  color:var(--muted);
+  text-decoration:none;
+  transition:color 0.15s;
+}
+.nav-link:hover{color:var(--text);}
+.nav-link.active{color:var(--green);}
+.nav-cta{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+  color:var(--green);
+  text-decoration:none;
+  border:1px solid var(--green-deep);
+  padding:10px 14px;
+  margin-left:0;
+  transition:border-color 0.15s, color 0.15s;
+}
+.nav-cta:hover{border-color:var(--green);color:var(--green-glow);}
+
+/* ===== LED ===== */
+.led{
+  display:inline-block;
+  width:6px;
+  height:6px;
+  background:var(--green);
+  animation:pulse 2s infinite ease-in-out;
+  flex-shrink:0;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+
+/* ===== TAGS ===== */
+.tag{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid var(--border);
+  padding:5px 10px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+  line-height:1;
+}
+.tag.green{
+  border-color:var(--green-deep);
+  color:var(--green);
+  background:rgba(16,185,129,0.05);
+}
+
+/* ===== SECTIONS LAYOUT ===== */
+section.std{
+  min-height:100vh;
+  padding:100px 120px 80px 120px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+section.compact{
+  padding:100px 120px;
+}
+.section-header{
+  margin-bottom:64px;
+  max-width:760px;
+}
+.section-tag{margin-bottom:24px;}
+.section-sub{
+  font-size:18px;
+  color:var(--muted);
+  max-width:560px;
+  line-height:1.75;
+  margin-top:24px;
+}
+
+/* ===== HERO ===== */
+.hero{
+  min-height:100vh;
+  padding:140px 120px 100px 120px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  background-color:#050505;
+  position:relative;
+  overflow:hidden;
+}
+.scan-line{
+  position:absolute;
+  left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg, transparent 0%, rgba(16,185,129,0.4) 20%, rgba(16,185,129,0.4) 80%, transparent 100%);
+  animation:scan 9s linear infinite;
+  pointer-events:none;
+  z-index:1;
+}
+@keyframes scan{
+  0%{top:0%;opacity:0;}
+  5%{opacity:1;}
+  95%{opacity:1;}
+  100%{top:100%;opacity:0;}
+}
+.cursor{
+  color:#10B981;
+  animation:blink 1s step-end infinite;
+  font-size:0.8em;
+  margin-left:4px;
+  display:inline-block;
+}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+.hero-status{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-bottom:64px;
+  position:relative;
+  z-index:2;
+}
+.hero h1{
+  font-size:clamp(44px,6vw,72px);
+  max-width:820px;
+  margin-bottom:32px;
+  position:relative;
+  z-index:2;
+}
+.hero h1 .accent{color:var(--green);display:block;}
+.hero h1 span{display:block;}
+.hero-sub{
+  font-size:18px;
+  color:var(--muted);
+  max-width:540px;
+  line-height:1.75;
+  margin-bottom:24px;
+  position:relative;
+  z-index:2;
+}
+.hero-sub-2{
+  font-size:16px;
+  color:var(--muted);
+  max-width:540px;
+  line-height:1.75;
+  margin-bottom:48px;
+  position:relative;
+  z-index:2;
+}
+.cta-row{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:24px;
+  position:relative;
+  z-index:2;
+}
+
+/* ===== BUTTONS ===== */
+.btn-primary{
+  background:var(--green);
+  color:var(--bg);
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;
+  font-weight:500;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  padding:16px 28px;
+  border:none;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-block;
+  transition:background 0.15s;
+}
+.btn-primary:hover{background:var(--green-glow);}
+.cta-link{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+  text-decoration:none;
+  transition:color 0.15s;
+}
+.cta-link:hover{color:var(--text);}
+
+/* ===== METRICS ===== */
+.metrics{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1px;
+  background:#1A1A1A;
+  border:1px solid #1A1A1A;
+  margin-top:80px;
+  position:relative;
+  z-index:2;
+}
+.metric-cell{
+  background:#0D0D0D;
+  padding:32px 28px;
+  border-top:2px solid rgba(16,185,129,0.3);
+}
+.metric-num{
+  font-family:'Archivo Black',sans-serif;
+  font-size:clamp(36px,5vw,56px);
+  color:var(--green);
+  display:block;
+  line-height:1;
+  margin-bottom:10px;
+  letter-spacing:-0.02em;
+}
+.metric-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  color:#A0A09A;
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+  line-height:1.6;
+}
+
+/* ===== CARDS ===== */
+.cards-3{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:#1A1A1A;
+  border:1px solid #1A1A1A;
+}
+.cards-4{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1px;
+  background:#1A1A1A;
+  border:1px solid #1A1A1A;
+}
+.card{
+  background:var(--surface);
+  padding:40px 32px 52px 32px;
+  position:relative;
+  overflow:hidden;
+  transition:transform 0.2s ease, background 0.2s ease;
+}
+.card:hover{
+  transform:translateY(-2px);
+  background:#141414;
+}
+.card .accent-line{
+  position:absolute;
+  top:0;left:0;right:0;
+  height:3px;
+  background:var(--green);
+  z-index:1;
+}
+.card.red .accent-line{background:var(--red);}
+.card-icon{
+  position:relative;
+  z-index:1;
+  margin-bottom:16px;
+  display:block;
+}
+.card-tag{
+  position:relative;
+  z-index:1;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+  margin-bottom:20px;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid var(--border);
+  padding:5px 10px;
+  line-height:1;
+}
+.card.red .card-tag{
+  border-color:rgba(239,68,68,0.3);
+  color:#EF4444;
+  opacity:0.85;
+}
+.card .card-tag.green{
+  border-color:var(--green-deep);
+  color:var(--green);
+  background:rgba(16,185,129,0.05);
+}
+.card h3{
+  position:relative;
+  z-index:1;
+  font-family:'Inter',sans-serif;
+  font-size:18px;
+  font-weight:600;
+  text-transform:none;
+  letter-spacing:0;
+  line-height:1.3;
+  margin-bottom:16px;
+  color:var(--text);
+}
+.card-body{
+  position:relative;
+  z-index:1;
+  font-size:14px;
+  color:var(--muted);
+  line-height:1.75;
+}
+.cards-4 .card{padding:40px 28px 52px 28px;}
+.cards-4 .card h3{font-size:17px;}
+.cards-4 .card-body{font-size:13px;}
+
+.card-bignum{
+  position:absolute;
+  bottom:-16px;
+  right:20px;
+  font-family:'Archivo Black',sans-serif;
+  font-size:120px;
+  line-height:1;
+  pointer-events:none;
+  user-select:none;
+  letter-spacing:-0.04em;
+  z-index:0;
+}
+.card.red .card-bignum{color:rgba(239,68,68,0.045);}
+.cards-4 .card .card-bignum{color:rgba(16,185,129,0.04);}
+.cards-3.green .card .card-bignum{color:rgba(16,185,129,0.04);}
+
+/* ===== COMPARISON ===== */
+.compare{
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  gap:1px !important;
+  background:#1A1A1A !important;
+  border:1px solid #1A1A1A;
+  max-width:1000px;
+}
+.compare-col{position:relative;}
+.compare-col.left{background:#050505;}
+.compare-col.right{background:#091A11 !important;}
+.compare-col.right::before{
+  content:"";
+  position:absolute;
+  top:0;left:0;right:0;
+  height:3px;
+  background:#10B981 !important;
+}
+.compare-head{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+  padding:20px 32px 16px;
+}
+.compare-col.left .compare-head{color:#555550 !important;}
+.compare-col.right .compare-head{color:#10B981 !important;}
+.compare-row{
+  padding:18px 32px;
+  font-size:14px;
+  line-height:1.6;
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  min-height:84px;
+}
+.compare-col.left .compare-row{
+  color:#6B6B65 !important;
+  border-bottom:1px solid #0D0D0D;
+}
+.compare-col.left .compare-row span{color:#6B6B65 !important;}
+.compare-col.right .compare-row{
+  color:#F0F0EB !important;
+  border-bottom:1px solid #0F2010;
+}
+.compare-col.right .compare-row span{color:#F0F0EB !important;}
+
+/* ===== 2x2 ===== */
+.cards-2x2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1px;
+  background:#1A1A1A;
+  border:1px solid #1A1A1A;
+  max-width:1100px;
+}
+.cards-2x2 .card{padding:36px 32px;}
+.cards-2x2 .card::after{
+  content:"";
+  position:absolute;
+  bottom:0;left:0;
+  width:40px;
+  height:2px;
+  background:var(--green);
+}
+.cards-2x2 .card .accent-line{display:none;}
+.cards-2x2 .card h3{font-size:16px;}
+.cards-2x2 .card-body{font-size:13px;}
+.industry-icon{display:block;margin-bottom:20px;}
+
+/* ===== AI COMPARE ===== */
+.ai-compare{margin-top:48px;max-width:860px;}
+.ai-compare-inner{display:grid;grid-template-columns:1fr auto 1fr;gap:1px;background:#1A1A1A;}
+.ai-state{padding:32px 28px;display:flex;flex-direction:column;align-items:flex-start;gap:0;}
+.ai-state--bad{background:#0A0A0A;}
+.ai-state--good{background:#071510;border-top:2px solid #10B981;}
+.ai-state-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:20px;display:flex;align-items:center;}
+.ai-state--bad .ai-state-label{color:#EF4444;opacity:0.7;}
+.ai-state--good .ai-state-label{color:#10B981;}
+.ai-inputs{display:flex;flex-direction:column;gap:6px;width:100%;margin-bottom:16px;}
+.ai-input{font-family:'JetBrains Mono',monospace;font-size:11px;padding:6px 10px;text-transform:lowercase;opacity:0;transform:translateX(-8px);transition:opacity 0.3s ease,transform 0.3s ease;}
+.ai-input.bad{background:rgba(239,68,68,0.06);border-left:2px solid rgba(239,68,68,0.25);color:#8A4040;}
+.ai-input.good{background:rgba(16,185,129,0.07);border-left:2px solid rgba(16,185,129,0.3);color:#5A9A7A;transform:translateX(8px);}
+.ai-compare.visible .ai-input{opacity:1;transform:translateX(0);}
+.ai-compare.visible .ai-input:nth-child(1){transition-delay:0.1s;}
+.ai-compare.visible .ai-input:nth-child(2){transition-delay:0.25s;}
+.ai-compare.visible .ai-input:nth-child(3){transition-delay:0.4s;}
+.ai-compare.visible .ai-input:nth-child(4){transition-delay:0.55s;}
+.ai-arrow{font-family:'JetBrains Mono',monospace;font-size:18px;color:#2A2A2A;margin:8px 0;align-self:center;}
+.ai-arrow.good{color:rgba(16,185,129,0.4);}
+.ai-box{font-family:'Archivo Black',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:0.15em;padding:10px 24px;align-self:center;margin:4px 0;}
+.ai-box--bad{border:1px solid #2A2A2A;color:#3A3A35;}
+.ai-box--good{border:1px solid #10B981;color:#10B981;background:rgba(16,185,129,0.05);}
+.ai-output{font-family:'Inter',sans-serif;font-size:13px;line-height:1.6;margin-top:8px;padding:12px 14px;}
+.ai-output.bad{color:#4A4A45;border-left:2px solid #2A2A2A;}
+.ai-output.good{color:#C8E8D8;border-left:2px solid #10B981;background:rgba(16,185,129,0.04);}
+.ai-divider-vs{display:flex;align-items:center;justify-content:center;background:#050505;padding:0 16px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#2A2A2A;letter-spacing:0.15em;writing-mode:vertical-rl;}
+
+/* ===== AI FOUNDATION ===== */
+.ai-foundation{
+  position:relative;
+  padding:120px 120px;
+  background:#050505;
+  border-top:1px solid #1A1A1A;
+  border-bottom:1px solid #1A1A1A;
+  overflow:hidden;
+}
+.ai-foundation::before{
+  content:"";
+  position:absolute;
+  left:0;top:0;bottom:0;
+  width:3px;
+  background:var(--green);
+  z-index:1;
+}
+.ai-bg-text{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  font-family:'Archivo Black',sans-serif;
+  font-size:clamp(80px,12vw,160px);
+  color:rgba(16,185,129,0.03);
+  white-space:nowrap;
+  pointer-events:none;
+  user-select:none;
+  letter-spacing:-0.02em;
+  text-transform:uppercase;
+  z-index:0;
+}
+.ai-content{position:relative;z-index:2;max-width:800px;}
+.ai-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  color:var(--green);
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  margin-bottom:32px;
+  display:block;
+}
+.ai-foundation h2{
+  font-size:clamp(36px,5vw,60px);
+  line-height:1.05;
+  margin-bottom:32px;
+  max-width:780px;
+}
+.ai-p1{
+  font-size:18px;
+  color:var(--text);
+  max-width:680px;
+  line-height:1.75;
+  margin-bottom:20px;
+}
+.ai-p2{
+  font-size:18px;
+  color:var(--muted);
+  max-width:680px;
+  line-height:1.75;
+  margin-bottom:48px;
+}
+.ai-stats{
+  display:flex;
+  gap:48px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.ai-stat-num{
+  font-family:'Archivo Black',sans-serif;
+  font-size:32px;
+  color:var(--green);
+  letter-spacing:-0.02em;
+  line-height:1;
+  margin-bottom:8px;
+}
+.ai-stat-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+}
+.ai-divider{
+  width:1px;
+  height:40px;
+  background:#1A1A1A;
+}
+
+/* ===== WAITLIST ===== */
+.waitlist-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:80px;
+  align-items:start;
+}
+.waitlist-left .tag{margin-bottom:24px;}
+.waitlist-left h2{
+  font-size:clamp(32px,3.6vw,48px);
+  line-height:1.1;
+  margin-bottom:16px;
+}
+.waitlist-body{
+  font-size:16px;
+  color:var(--muted);
+  line-height:1.75;
+  margin-bottom:32px;
+  max-width:520px;
+}
+.price-block{
+  border-left:3px solid var(--green);
+  padding:16px 20px;
+  background:rgba(16,185,129,0.05);
+  margin-bottom:40px;
+  font-size:16px;
+  color:var(--text);
+  line-height:1.6;
+  max-width:520px;
+}
+.trust-bullet{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  margin-bottom:16px;
+  font-size:14px;
+  color:var(--muted);
+  line-height:1.5;
+}
+.contact-line{
+  font-size:13px;
+  color:var(--muted);
+  margin-top:32px;
+}
+.contact-line a{
+  color:var(--green);
+  text-decoration:none;
+}
+.contact-line a:hover{color:var(--green-glow);}
+
+.form-wrap{
+  background:#050505;
+  border:1px solid var(--border);
+  padding:0;
+}
+.form{
+  display:flex;
+  flex-direction:column;
+}
+.field{
+  background:var(--surface);
+  display:flex;
+  flex-direction:column;
+  border-bottom:1px solid var(--border);
+  border-left:2px solid transparent;
+  transition:background 0.15s, border-left-color 0.15s;
+}
+.field:last-of-type{border-bottom:none;}
+.field:focus-within{
+  background:var(--elevated);
+  border-left-color:var(--green);
+}
+.field label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+  padding:14px 20px 6px;
+}
+.field input,
+.field select,
+.field textarea{
+  background:transparent;
+  border:none;
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  font-size:14px;
+  padding:0 20px 14px;
+  outline:none;
+  width:100%;
+  resize:none;
+}
+.field textarea{
+  min-height:80px;
+  padding-bottom:18px;
+  line-height:1.6;
+}
+.field select{
+  appearance:none;
+  -webkit-appearance:none;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%238A8A85' fill='none' stroke-width='1'/></svg>");
+  background-repeat:no-repeat;
+  background-position:right 20px center;
+  padding-right:40px;
+  cursor:pointer;
+}
+.field select option{background:#0D0D0D;color:var(--text);}
+.field input::placeholder,
+.field textarea::placeholder{color:var(--mono);}
+
+.form-submit{
+  background:var(--green);
+  color:var(--bg);
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;
+  font-weight:500;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  padding:18px 28px;
+  border:none;
+  cursor:pointer;
+  text-align:left;
+  width:100%;
+  display:block;
+  transition:background 0.15s;
+}
+.form-submit:hover{background:var(--green-glow);}
+
+.form-success{
+  padding:48px 40px;
+  background:#050505;
+  border:1px solid var(--border);
+  position:relative;
+}
+.form-success::before{
+  content:"";
+  position:absolute;
+  top:0;left:0;right:0;
+  height:3px;
+  background:var(--green);
+}
+.form-success h3{
+  font-family:'Archivo Black',sans-serif;
+  font-size:28px;
+  text-transform:uppercase;
+  letter-spacing:-0.02em;
+  margin-bottom:14px;
+  color:var(--text);
+}
+.form-success p{
+  font-size:15px;
+  color:var(--muted);
+  line-height:1.7;
+}
+
+/* ===== BLOG ===== */
+.blog-section{
+  padding:80px 120px;
+  background:#050505;
+  border-top:1px solid var(--border);
+}
+.blog-head{margin-bottom:48px;max-width:600px;}
+.blog-head h2{
+  font-size:clamp(28px,3vw,40px);
+  margin-bottom:16px;
+}
+.blog-head p{
+  font-size:16px;
+  color:var(--muted);
+  max-width:500px;
+  line-height:1.7;
+}
+.blog-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:#1A1A1A;
+  border:1px solid #1A1A1A;
+}
+.blog-card{
+  background:var(--surface);
+  padding:32px;
+  position:relative;
+  transition:transform 0.2s ease, background 0.2s ease;
+}
+.blog-card:hover{
+  transform:translateY(-2px);
+  background:var(--elevated);
+}
+.blog-card .card-tag{margin-bottom:0;}
+.blog-card h3{
+  font-family:'Inter',sans-serif;
+  font-size:16px;
+  font-weight:600;
+  margin:14px 0 10px;
+  line-height:1.35;
+  color:var(--text);
+}
+.blog-card-body{
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.7;
+}
+.blog-link{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  color:var(--green);
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+  margin-top:20px;
+  display:block;
+  text-decoration:none;
+}
+
+/* ===== DEPTH INDICATOR ===== */
+.depth{
+  position:fixed;
+  right:32px;
+  top:50%;
+  transform:translateY(-50%);
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+  z-index:40;
+}
+.depth a{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-decoration:none;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  text-transform:uppercase;
+  letter-spacing:0.16em;
+  color:var(--mono);
+  transition:color 0.2s;
+}
+.depth-dot{
+  width:6px;height:6px;
+  background:var(--shaft);
+  flex-shrink:0;
+  transition:background 0.2s, transform 0.2s;
+}
+.depth a.active .depth-dot{
+  background:var(--green);
+  transform:scale(1.5);
+}
+.depth a.active{color:var(--green);}
+.depth-label{opacity:0;transition:opacity 0.2s;}
+.depth a:hover .depth-label,
+.depth a.active .depth-label{opacity:1;}
+.depth a:hover{color:var(--muted);}
+
+/* ===== FOOTER ===== */
+footer{
+  background:#050505;
+  border-top:1px solid var(--border);
+}
+.footer-upper{
+  padding:64px 120px;
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr;
+  gap:64px;
+}
+.foot-brand{
+  font-family:'Archivo Black',sans-serif;
+  font-size:20px;
+  text-transform:uppercase;
+  letter-spacing:0.02em;
+  margin-bottom:16px;
+  display:block;
+}
+.foot-tag{
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.8;
+  max-width:380px;
+}
+.foot-email{
+  color:var(--green);
+  text-decoration:none;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  display:inline-block;
+  margin-top:16px;
+  letter-spacing:0.08em;
+}
+.foot-email:hover{color:var(--green-glow);}
+.foot-col-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+  margin-bottom:18px;
+  display:block;
+}
+.foot-link{
+  display:block;
+  font-size:13px;
+  color:var(--muted);
+  text-decoration:none;
+  margin-bottom:10px;
+  transition:color 0.15s;
+}
+.foot-link:hover{color:var(--text);}
+.foot-static{
+  display:block;
+  font-size:13px;
+  color:var(--muted);
+  margin-bottom:10px;
+}
+.footer-lower{
+  border-top:1px solid #111;
+  padding:24px 120px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:16px;
+}
+.foot-meta{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+}
+.foot-meta.dim{color:#4A6A4A;}
+
+/* ===== PRIVACY MODAL ===== */
+.modal-overlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.9);
+  z-index:200;
+  align-items:flex-start;
+  justify-content:center;
+  padding:60px 20px;
+  overflow-y:auto;
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:#0D0D0D;
+  border:1px solid var(--border);
+  max-width:700px;
+  width:100%;
+  padding:48px 48px 56px;
+  position:relative;
+  color:var(--text);
+}
+.modal::before{
+  content:"";
+  position:absolute;
+  top:0;left:0;right:0;
+  height:3px;
+  background:var(--green);
+}
+.modal-close{
+  position:absolute;
+  top:16px;right:16px;
+  background:transparent;
+  border:1px solid var(--border);
+  color:var(--muted);
+  width:36px;height:36px;
+  font-size:18px;
+  cursor:pointer;
+  font-family:'JetBrains Mono',monospace;
+  transition:color 0.15s, border-color 0.15s;
+}
+.modal-close:hover{color:var(--text);border-color:var(--text);}
+.modal h2{
+  font-family:'Archivo Black',sans-serif;
+  font-size:24px;
+  text-transform:uppercase;
+  letter-spacing:-0.01em;
+  margin-bottom:24px;
+}
+.modal h3{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  color:var(--green);
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+  margin:24px 0 10px;
+}
+.modal p, .modal li{
+  font-size:14px;
+  color:var(--muted);
+  line-height:1.7;
+  margin-bottom:8px;
+}
+.modal ul{padding-left:18px;}
+
+/* ===== FADE-IN ===== */
+.fade-in{
+  opacity:0;
+  transform:translateY(20px);
+  transition:opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-in.visible{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width:1100px){
+  section.std,section.compact{padding:100px 80px 80px 80px;}
+  .hero{padding:140px 80px 80px 80px;}
+  .ai-foundation{padding:100px 80px;}
+  .blog-section{padding:80px 80px;}
+  .footer-upper{padding:64px 80px;}
+  .footer-lower{padding:24px 80px;}
+  .cards-4{grid-template-columns:repeat(2,1fr);}
+  .metrics{grid-template-columns:repeat(2,1fr);}
+  .waitlist-grid{gap:48px;}
+  .ai-bg-text{font-size:clamp(60px,10vw,120px);}
+}
+@media (max-width:768px){
+  .shaft{left:20px;}
+  .nav{padding:0 20px;}
+  .nav-tag{display:none;}
+  .nav-link{display:none;}
+  section.std,section.compact{padding:80px 24px 60px 24px;min-height:auto;}
+  .hero{padding:100px 24px 60px 24px;min-height:auto;}
+  .ai-foundation{padding:80px 24px;}
+  .blog-section{padding:60px 24px;}
+  .footer-upper{padding:48px 24px;grid-template-columns:1fr;gap:40px;}
+  .footer-lower{padding:24px 24px;flex-direction:column;align-items:flex-start;}
+  .cards-3,.cards-4,.cards-2x2,.compare,.form-wrap,.waitlist-grid,.blog-grid{grid-template-columns:1fr;}
+  .waitlist-grid{display:flex;flex-direction:column;}
+  .metrics{grid-template-columns:1fr 1fr;}
+  .depth{display:none;}
+  .hero h1{font-size:clamp(36px,8vw,56px);}
+  h2{font-size:32px !important;}
+  .cta-row{gap:16px;}
+  .ai-stats{gap:24px;flex-direction:column;align-items:flex-start;}
+  .ai-divider{display:none;}
+  .ai-compare-inner{grid-template-columns:1fr;}
+  .ai-divider-vs{writing-mode:horizontal-tb;padding:12px;}
+  .modal{padding:40px 24px;}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas" aria-hidden="true"></canvas>
+<div class="shaft" aria-hidden="true"></div>
+
+<nav class="nav" id="nav" aria-label="Główna nawigacja" data-screen-label="00 Nav">
+  <div class="nav-left">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span class="led"></span>
+      <a href="#hero" aria-label="Compilore">
+        <img src="compilore-logo.png" alt="Compilore — Knowledge Compiler" onerror="this.style.display='none';document.getElementById('nav-brand-text').style.display='block'" style="height:32px;mix-blend-mode:screen;image-rendering:crisp-edges;display:block;">
+        <span id="nav-brand-text" style="display:none;font-family:'Archivo Black',sans-serif;font-size:16px;text-transform:uppercase;letter-spacing:0.08em;color:#F5F5F0;">COMPILORE</span>
+      </a>
+    </div>
+    <span class="nav-tag">[ LIVE ]</span>
+  </div>
+  <div class="nav-right">
+    <a href="#problem" class="nav-link" data-section="problem">Problem</a>
+    <a href="#how" class="nav-link" data-section="how">Jak działa</a>
+    <a href="#forwhom" class="nav-link" data-section="forwhom">Dla kogo</a>
+    <a href="#waitlist" class="nav-cta">[ Dołącz do pilotu ]</a>
+  </div>
+</nav>
+
+<aside class="depth" aria-hidden="true">
+  <a href="#hero" data-section="hero"><span class="depth-dot"></span><span class="depth-label">HERO</span></a>
+  <a href="#problem" data-section="problem"><span class="depth-dot"></span><span class="depth-label">PROBLEM</span></a>
+  <a href="#how" data-section="how"><span class="depth-dot"></span><span class="depth-label">ROZWIĄZANIE</span></a>
+  <a href="#difference" data-section="difference"><span class="depth-dot"></span><span class="depth-label">RÓŻNICA</span></a>
+  <a href="#grows" data-section="grows"><span class="depth-dot"></span><span class="depth-label">ROŚNIE</span></a>
+  <a href="#forwhom" data-section="forwhom"><span class="depth-dot"></span><span class="depth-label">DLA KOGO</span></a>
+  <a href="#waitlist" data-section="waitlist"><span class="depth-dot"></span><span class="depth-label">PILOT</span></a>
+</aside>
+
+<!-- HERO -->
+<section id="hero" class="hero fade-in" data-screen-label="01 Hero">
+  <div class="scan-line"></div>
+  <div class="hero-status">
+    <span class="tag green"><span class="led"></span>System aktywny</span>
+    <span class="tag">Pilot — ograniczona liczba miejsc</span>
+  </div>
+  <h1>
+    <span>TWOJA FIRMA WIE</span>
+    <span>WIĘCEJ NIŻ MYŚLISZ.</span>
+    <span class="accent">PROBLEM W TYM,</span>
+    <span>ŻE NIKT NIE MOŻE</span>
+    <span>TEGO ZNALEŹĆ.<span class="cursor">█</span></span>
+  </h1>
+  <p class="hero-sub">Compilore to nowoczesna baza wiedzy nowej generacji — napędzana przez AI, zaprojektowana dla polskiego B2B. Wgrywasz dokumenty, zadajesz pytania, dostajesz precyzyjne odpowiedzi ze wskazaniem źródła. W 30 sekund.</p>
+  <p class="hero-sub-2">Koniec z szukaniem w folderach. Koniec z „sprawdzę i oddzwonię". Koniec z wiedzą zamkniętą w głowach ludzi. Twoja firma działa na najnowszych technologiach — efektywnie, natychmiastowo, z pełną kontrolą.</p>
+  <div class="cta-row">
+    <a href="#waitlist" class="btn-primary">[ Chcę zobaczyć jak to działa → ]</a>
+    <a href="https://app.compilore.pl" class="cta-link">app.compilore.pl ↗</a>
+  </div>
+  <div class="metrics" id="metrics">
+    <div class="metric-cell">
+      <div class="metric-num" data-target="11" data-suffix=" tygodni">0 tygodni</div>
+      <div class="metric-label">PRACY ROCZNIE TRACONE NA SZUKANIE / NA DORADCĘ</div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-num" data-target="18" data-suffix=" min">0 min</div>
+      <div class="metric-label">ŚREDNI CZAS JEDNEGO WYSZUKIWANIA W DOKUMENTACH</div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-num" data-target="30" data-suffix=" s">0 s</div>
+      <div class="metric-label">CZAS ODPOWIEDZI W COMPILORE — ZE WSKAZANIEM ŹRÓDŁA</div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-num" data-target="1" data-suffix=" dzień">0 dzień</div>
+      <div class="metric-label">CZAS WDROŻENIA — OD PIERWSZEGO DOKUMENTU DO PIERWSZEJ ODPOWIEDZI</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section id="problem" class="std fade-in" data-screen-label="02 Problem">
+  <div class="section-header">
+    <span class="tag section-tag">[ Problem ]</span>
+    <h2 style="font-size:clamp(32px,4.4vw,56px);max-width:700px;">TWÓJ NAJLEPSZY<br>HANDLOWIEC<br>NIE SPRZEDAJE.<br>SZUKA.</h2>
+  </div>
+  <div class="cards-3">
+    <article class="card red">
+      <div class="accent-line"></div>
+      <svg class="card-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.6"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 8.63 19.79 19.79 0 01.22 2.18 2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+      <span class="card-tag">[ SYTUACJA 01 ]</span>
+      <h3>Sprawdzę i oddzwonię</h3>
+      <p class="card-body">Klient czeka. Handlowiec przeszukuje trzy katalogi i dwa foldery na serwerze. Zanim znajdzie odpowiedź — klient zamawia u konkurencji.</p>
+      <div class="card-bignum">01</div>
+    </article>
+    <article class="card red">
+      <div class="accent-line"></div>
+      <svg class="card-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.6"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="card-tag">[ SYTUACJA 02 ]</span>
+      <h3>Nowy pracownik, ten sam problem</h3>
+      <p class="card-body">Nowy człowiek potrzebuje miesięcy żeby ogarnąć wiedzę produktową. Przez cały ten czas ciągnie za rękę doświadczonego doradcę — który przez to nie może robić swojej pracy. Koszt niewidoczny, ale realny.</p>
+      <div class="card-bignum">02</div>
+    </article>
+    <article class="card red">
+      <div class="accent-line"></div>
+      <svg class="card-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.6"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      <span class="card-tag">[ SYTUACJA 03 ]</span>
+      <h3>Wiedza odchodzi razem z ludźmi</h3>
+      <p class="card-body">Doświadczony handlowiec odchodzi z firmy. Razem z nim znika wiedza o produktach, specyfikacjach i rozwiązaniach, której nigdzie nie zapisałeś. I której nie odzyskasz.</p>
+      <div class="card-bignum">03</div>
+    </article>
+  </div>
+</section>
+
+<!-- HOW -->
+<section id="how" class="std fade-in" data-screen-label="03 How">
+  <div class="section-header">
+    <span class="tag section-tag">[ Rozwiązanie ]</span>
+    <h2 style="font-size:clamp(32px,4.4vw,56px);margin-bottom:16px;">JAK TO DZIAŁA</h2>
+    <p class="section-sub" style="margin-top:0;">Cztery kroki. Żadnych integracji do konfigurowania. Żadnych miesięcy wdrożenia. Pierwsze wyniki w ciągu jednego dnia.</p>
+  </div>
+  <div class="cards-4">
+    <article class="card">
+      <div class="accent-line"></div>
+      <svg class="card-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.7"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <span class="card-tag green"><span class="led"></span>01 // WGRYWASZ</span>
+      <h3>Dajesz dokumenty</h3>
+      <p class="card-body">PDFy od producentów, cenniki, warunki handlowe, notatki ze szkoleń, instrukcje serwisowe. Cokolwiek masz w firmie — Compilore to czyta i rozumie.</p>
+      <div class="card-bignum">01</div>
+    </article>
+    <article class="card">
+      <div class="accent-line"></div>
+      <svg class="card-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.7"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+      <span class="card-tag green"><span class="led"></span>02 // KOMPILUJE</span>
+      <h3>AI buduje bazę wiedzy</h3>
+      <p class="card-body">Najnowsze modele językowe analizują każdy dokument i budują spójną, połączoną bazę wiedzy. Nie kolejny folder — żywy, inteligentny system, który rośnie z każdym nowym dokumentem i uczy się Twojej firmy.</p>
+      <div class="card-bignum">02</div>
+    </article>
+    <article class="card">
+      <div class="accent-line"></div>
+      <svg class="card-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.7"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      <span class="card-tag green"><span class="led"></span>03 // PYTASZ</span>
+      <h3>Zadajesz pytanie</h3>
+      <p class="card-body">Piszesz jak do człowieka — po polsku. „Jaki jest maksymalny pobór prądu pompy X?" „Czym różni się model A od B?" „Jakie są warunki gwarancji producenta Y?" System rozumie kontekst.</p>
+      <div class="card-bignum">03</div>
+    </article>
+    <article class="card">
+      <div class="accent-line"></div>
+      <svg class="card-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.7"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      <span class="card-tag green"><span class="led"></span>04 // ODPOWIEDŹ</span>
+      <h3>Dostajesz odpowiedź ze źródłem</h3>
+      <p class="card-body">Precyzyjna odpowiedź pojawia się w kilkanaście sekund. Zawsze z dokładnym wskazaniem dokumentu, z którego pochodzi. Bez źródła — brak odpowiedzi. To nie jest chatbot. To system wiedzy.</p>
+      <div class="card-bignum">04</div>
+    </article>
+  </div>
+</section>
+
+<!-- DIFFERENCE -->
+<section id="difference" class="std alt fade-in" data-screen-label="04 Difference">
+  <div class="section-header">
+    <span class="tag section-tag">[ Różnica ]</span>
+    <h2 style="font-size:clamp(32px,4.4vw,56px);max-width:700px;margin-bottom:16px;">NIE KOLEJNA<br>WYSZUKIWARKA.</h2>
+    <p class="section-sub" style="margin-top:0;">Wyszukiwarka szuka. Compilore wie. To fundamentalna różnica — i widać ją w każdej minucie pracy.</p>
+  </div>
+  <div class="compare">
+    <div class="compare-col left">
+      <div class="compare-head">DZIŚ — SZUKASZ SAM</div>
+      <div class="compare-row"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;margin-top:2px"><line x1="2" y1="2" x2="12" y2="12" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round" opacity="0.5"></line><line x1="12" y1="2" x2="2" y2="12" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round" opacity="0.5"></line></svg><span>Przekopujesz 5 folderów i nie wiesz czy to co znajdziesz jest aktualne</span></div>
+      <div class="compare-row"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;margin-top:2px"><line x1="2" y1="2" x2="12" y2="12" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round" opacity="0.5"></line><line x1="12" y1="2" x2="2" y2="12" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round" opacity="0.5"></line></svg><span>Nie wiesz czy informacja jest aktualna — dokument mógł się zmienić miesiąc temu</span></div>
+      <div class="compare-row"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;margin-top:2px"><line x1="2" y1="2" x2="12" y2="12" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round" opacity="0.5"></line><line x1="12" y1="2" x2="2" y2="12" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round" opacity="0.5"></line></svg><span>Nowy pracownik startuje od zera przez miesiące, obciążając senior zespół</span></div>
+      <div class="compare-row"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;margin-top:2px"><line x1="2" y1="2" x2="12" y2="12" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round" opacity="0.5"></line><line x1="12" y1="2" x2="2" y2="12" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round" opacity="0.5"></line></svg><span>Wiedza jest w głowach ludzi — i odchodzi razem z nimi bez ostrzeżenia</span></div>
+      <div class="compare-row"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;margin-top:2px"><line x1="2" y1="2" x2="12" y2="12" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round" opacity="0.5"></line><line x1="12" y1="2" x2="2" y2="12" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round" opacity="0.5"></line></svg><span>Senior spędza godziny dziennie odpowiadając na pytania, które zadano już setki razy</span></div>
+    </div>
+    <div class="compare-col right">
+      <div class="compare-head">COMPILORE</div>
+      <div class="compare-row"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;margin-top:2px"><polyline points="2,7 5,10 12,3" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span>Jedno pytanie. Jedna odpowiedź. 30 sekund. Ze wskazaniem źródła.</span></div>
+      <div class="compare-row"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;margin-top:2px"><polyline points="2,7 5,10 12,3" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span>Każda odpowiedź ma źródło i datę dokumentu. Wiesz czemu ufasz.</span></div>
+      <div class="compare-row"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;margin-top:2px"><polyline points="2,7 5,10 12,3" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span>Nowy pracownik ma pełną wiedzę firmy od pierwszego dnia pracy.</span></div>
+      <div class="compare-row"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;margin-top:2px"><polyline points="2,7 5,10 12,3" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span>Wiedza jest w systemie. Zostaje. Nawet gdy ludzie odchodzą.</span></div>
+      <div class="compare-row"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;margin-top:2px"><polyline points="2,7 5,10 12,3" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span>Senior robi to co powinien: sprzedaje, doradza, buduje relacje.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- GROWS -->
+<section id="grows" class="compact fade-in" data-screen-label="05 Grows">
+  <div class="section-header">
+    <span class="tag green section-tag">[ Compilore rośnie razem z tobą ]</span>
+    <h2 style="font-size:clamp(32px,4vw,48px);margin-bottom:16px;">CO SYSTEM ROBI<br>DALEJ</h2>
+    <p class="section-sub" style="margin-top:0;">Compilore nie jest narzędziem do jednorazowego wgrania dokumentów. To żywy system, który zarządza wiedzą Twojej firmy, uzupełnia ją i wykorzystuje żeby Twój zespół pracował szybciej.</p>
+  </div>
+  <div class="cards-3 green">
+    <article class="card">
+      <div class="accent-line"></div>
+      <svg class="card-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.7"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+      <span class="card-tag green">[ KROK 01 ]</span>
+      <h3>Zarządza i aktualizuje</h3>
+      <p class="card-body">Nowy cennik od producenta? Wgraj — system sam zaktualizuje bazę i oznaczy co się zmieniło. Wiedza firmy jest zawsze aktualna, bez ręcznej pracy.</p>
+      <div class="card-bignum">A</div>
+    </article>
+    <article class="card">
+      <div class="accent-line"></div>
+      <svg class="card-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.7"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <span class="card-tag green">[ KROK 02 ]</span>
+      <h3>Generuje oferty i zestawienia</h3>
+      <p class="card-body">Na podstawie bazy wiedzy Compilore tworzy szkice ofert, zestawienia porównawcze i odpowiedzi techniczne dopasowane do konkretnego klienta. Handlowiec edytuje i wysyła — zamiast pisać od zera.</p>
+      <div class="card-bignum">B</div>
+    </article>
+    <article class="card">
+      <div class="accent-line"></div>
+      <svg class="card-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.7"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span class="card-tag green">[ KROK 03 ]</span>
+      <h3>Uczy się Twojej firmy</h3>
+      <p class="card-body">Im więcej dokumentów, tym lepszy system. Compilore poznaje nazewnictwo Twojej firmy, specyfikę produktów i preferencje klientów. Po 30 dniach mówi językiem Twojego biznesu.</p>
+      <div class="card-bignum">C</div>
+    </article>
+  </div>
+</section>
+
+<!-- AI FOUNDATION -->
+<section id="aifoundation" class="ai-foundation fade-in" data-screen-label="06 AI Foundation">
+  <div class="ai-bg-text">AI FOUNDATION</div>
+  <div class="ai-content">
+    <span class="ai-label">[ COMPILORE — KNOWLEDGE LAYER ]</span>
+    <h2>ZANIM WPROWADZISZ AI<br>DO FIRMY — TWOJA FIRMA<br>MUSI WIEDZIEĆ, CO WIE.</h2>
+    <p class="ai-p1">Każdy system AI jest tak dobry, jak wiedza którą ma na wejściu. Nieuporządkowane dokumenty, silosy informacyjne i wiedza zamknięta w głowach ludzi to ściany, na które rozbijają się wdrożenia AI.</p>
+    <p class="ai-p2">Compilore porządkuje, strukturyzuje i utrzymuje wiedzę organizacyjną — tworząc fundament, na którym można budować automatyzacje, agentów i narzędzia AI kolejnej generacji. Firmy które zaczną dziś, będą o dwa lata do przodu.</p>
+    <div class="ai-compare">
+      <div class="ai-compare-inner">
+        <div class="ai-state ai-state--bad">
+          <div class="ai-state-label"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="margin-right:6px;flex-shrink:0"><line x1="2" y1="2" x2="10" y2="10" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round"></line><line x1="10" y1="2" x2="2" y2="10" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round"></line></svg>AI BEZ KONTEKSTU FIRMY</div>
+          <div class="ai-inputs">
+            <div class="ai-input bad">chaos dokumentów</div>
+            <div class="ai-input bad">brak historii klientów</div>
+            <div class="ai-input bad">silosy informacyjne</div>
+            <div class="ai-input bad">wiedza tylko w głowach</div>
+          </div>
+          <div class="ai-arrow">↓</div>
+          <div class="ai-box ai-box--bad">AI</div>
+          <div class="ai-arrow">↓</div>
+          <div class="ai-output bad">odpowiedź generyczna —<br>niedostosowana do Twojej firmy</div>
+        </div>
+        <div class="ai-divider-vs">VS</div>
+        <div class="ai-state ai-state--good">
+          <div class="ai-state-label"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="margin-right:6px;flex-shrink:0"><polyline points="2,6 5,9 10,3" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>AI Z COMPILORE</div>
+          <div class="ai-inputs">
+            <div class="ai-input good">wiedza produktowa firmy</div>
+            <div class="ai-input good">historia i kontekst klientów</div>
+            <div class="ai-input good">specyfika branży</div>
+            <div class="ai-input good">aktualne dokumenty</div>
+          </div>
+          <div class="ai-arrow good">↓</div>
+          <div class="ai-box ai-box--good">AI</div>
+          <div class="ai-arrow good">↓</div>
+          <div class="ai-output good">odpowiedź Twojej firmy —<br>precyzyjna, kontekstowa, gotowa do użycia</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOR WHOM -->
+<section id="forwhom" class="std fade-in" data-screen-label="07 For Whom">
+  <div class="section-header">
+    <span class="tag section-tag">[ Dla kogo ]</span>
+    <h2 style="font-size:clamp(32px,4.4vw,56px);max-width:720px;margin-bottom:16px;">ZBUDOWANE DLA FIRM,<br>KTÓRE SPRZEDAJĄ<br>PRODUKTY TECHNICZNE.</h2>
+    <p class="section-sub" style="margin-top:0;">Compilore jest zaprojektowany dla polskich firm B2B z szerokim portfolio produktowym — gdzie wiedza techniczna to przewaga konkurencyjna.</p>
+  </div>
+  <div class="cards-2x2">
+    <article class="card">
+      <svg class="industry-icon" width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round"><path d="M4 8 Q8 5 12 8 Q16 11 20 8 Q24 5 28 8"></path><path d="M4 14 Q8 11 12 14 Q16 17 20 14 Q24 11 28 14"></path><path d="M4 20 Q8 17 12 20 Q16 23 20 20 Q24 17 28 20"></path></svg>
+      <span class="card-tag green">[ DYSTRYBUCJA HVAC ]</span>
+      <h3>Klimatyzacja, wentylacja, instalacje</h3>
+      <p class="card-body">Setki produktów, dziesiątki producentów, stale zmieniające się specyfikacje. Compilore zna każdy parametr — Twój handlowiec pyta zamiast szukać. Odpowiedź techniczna pada natychmiast, przy kliencie.</p>
+    </article>
+    <article class="card">
+      <svg class="industry-icon" width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="14" r="4"></circle><line x1="14" y1="2" x2="14" y2="7"></line><line x1="14" y1="21" x2="14" y2="26"></line><line x1="2" y1="14" x2="7" y2="14"></line><line x1="21" y1="14" x2="26" y2="14"></line></svg>
+      <span class="card-tag green">[ NARZĘDZIA PRZEMYSŁOWE ]</span>
+      <h3>Komponenty, narzędzia, części zamienne</h3>
+      <p class="card-body">Klient zadaje pytanie techniczne przez telefon. Odpowiedź pada od razu — z katalogu, który system zna lepiej niż niejeden doradca. Profesjonalna obsługa na każdym poziomie zespołu.</p>
+    </article>
+    <article class="card">
+      <svg class="industry-icon" width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4 C23 7 23 11 20 13 L8 24 C6 26 4 26 3 24 C2 23 2 21 4 19 L15 7 C17 4 18 1 20 4Z"></path></svg>
+      <span class="card-tag green">[ SERWIS TECHNICZNY ]</span>
+      <h3>Firmy z własnym działem serwisowym</h3>
+      <p class="card-body">Dokumentacja, instrukcje, parametry serwisowe, historia napraw. Technik u klienta ma dostęp do pełnej wiedzy firmy z telefonu — bez dzwonienia na centralę, bez czekania.</p>
+    </article>
+    <article class="card">
+      <svg class="industry-icon" width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4,9 14,3 24,9"></polyline><polyline points="4,9 4,21 14,27 24,21 24,9"></polyline><line x1="14" y1="27" x2="14" y2="15"></line><polyline points="4,9 14,15 24,9"></polyline></svg>
+      <span class="card-tag green">[ DYSTRYBUCJA B2B ]</span>
+      <h3>Każda firma z szerokim portfolio</h3>
+      <p class="card-body">Duże portfolio, wielu dostawców, złożone warunki handlowe. Compilore ogarnia całość i daje każdemu w zespole dostęp do wiedzy, która wcześniej była tylko w głowie najlepszego handlowca.</p>
+    </article>
+  </div>
+</section>
+
+<!-- WAITLIST -->
+<section id="waitlist" class="std surface fade-in" data-screen-label="08 Waitlist">
+  <div class="waitlist-grid">
+    <div class="waitlist-left">
+      <span class="tag green">[ Pilot — ograniczona liczba miejsc ]</span>
+      <h2>COMPILORE DZIAŁA.<br>SZUKAMY PIERWSZYCH<br>FIRM W POLSCE.</h2>
+      <p class="waitlist-body">System jest aktywny i obsługuje pierwszych klientów. Oferujemy ograniczoną liczbę miejsc dla firm, które chcą jako pierwsze wdrożyć najnowocześniejsze narzędzie zarządzania wiedzą w polskim B2B.</p>
+      <div class="price-block">Firmy pilotowe kształtują produkt. I płacą mniej — od 1 000 PLN miesięcznie.</div>
+
+      <div class="trust-bullet"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;margin-top:3px"><polyline points="2,7 5,10 12,3" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span>Wdrożenie w 1 dzień — bez specjalistów IT</span></div>
+      <div class="trust-bullet"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;margin-top:3px"><polyline points="2,7 5,10 12,3" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span>Dane wyłącznie na serwerach EU (Hetzner, Niemcy)</span></div>
+      <div class="trust-bullet"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;margin-top:3px"><polyline points="2,7 5,10 12,3" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span>Zgodność z RODO — wbudowana w architekturę</span></div>
+      <div class="trust-bullet"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;margin-top:3px"><polyline points="2,7 5,10 12,3" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span>Rezygnacja w dowolnym momencie</span></div>
+
+      <p class="contact-line">Pytania? Napisz: <a href="/cdn-cgi/l/email-protection#2143405355444a61494440454753404c440f514d"><span class="__cf_email__" data-cfemail="82e0e3f0f6e7e9c2eae7e3e6e4f0e3efe7acf2ee">[email&#160;protected]</span></a></p>
+    </div>
+
+    <div class="waitlist-right" id="form-container">
+      <div class="form-wrap">
+        <form class="form" id="pilot-form">
+          <div class="field"><label for="name">Imię i nazwisko</label><input type="text" id="name" name="name" required></div>
+          <div class="field"><label for="company">Firma</label><input type="text" id="company" name="company" required></div>
+          <div class="field"><label for="industry">Branża</label>
+            <select id="industry" name="industry" required>
+              <option value="">Wybierz branżę</option>
+              <option>Dystrybucja HVAC</option>
+              <option>Narzędzia i komponenty przemysłowe</option>
+              <option>Elektrotechnika i automatyka</option>
+              <option>Serwis techniczny</option>
+              <option>Inna dystrybucja techniczna</option>
+              <option>Inna branża</option>
+            </select>
+          </div>
+          <div class="field"><label for="team">Liczba doradców / handlowców</label>
+            <select id="team" name="team" required>
+              <option value="">Wybierz</option>
+              <option>1–5 osób</option>
+              <option>6–15 osób</option>
+              <option>16–50 osób</option>
+              <option>Powyżej 50 osób</option>
+            </select>
+          </div>
+          <div class="field"><label for="pain">Na czym tracisz czas przy szukaniu informacji?</label><textarea id="pain" name="pain" placeholder="np. karty katalogowe, warunki handlowe, specyfikacje techniczne..."></textarea></div>
+          <div class="field"><label for="email">Email służbowy</label><input type="email" id="email" name="email" placeholder="jan.kowalski@firma.pl" required></div>
+          <button type="submit" class="form-submit">[ Zgłoś firmę do pilotu → ]</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOG -->
+<section id="blog" class="blog-section fade-in" data-screen-label="09 Blog">
+  <div class="blog-head">
+    <span class="tag section-tag">[ Baza wiedzy ]</span>
+    <h2>CZYTAJ O ZARZĄDZANIU<br>WIEDZĄ I AI W FIRMIE</h2>
+    <p>Artykuły o tym, jak polskie firmy B2B wdrażają AI — i dlaczego zaczyna się od porządku w wiedzy.</p>
+  </div>
+  <div class="blog-grid">
+    <article class="blog-card">
+      <span class="card-tag green">[ AI dla firm ]</span>
+      <h3>Wdrożenie AI w firmie zaczyna się od porządku w wiedzy</h3>
+      <p class="blog-card-body">Dlaczego 70% wdrożeń AI w MŚP kończy się niepowodzeniem — i co zrobić inaczej.</p>
+      <span class="blog-link">Wkrótce →</span>
+    </article>
+    <article class="blog-card">
+      <span class="card-tag green">[ Zarządzanie wiedzą ]</span>
+      <h3>Drugi mózg dla firmy — jak zorganizować wiedzę produktową</h3>
+      <p class="blog-card-body">Praktyczny przewodnik dla dystrybutorów technicznych z szerokim portfolio produktowym.</p>
+      <span class="blog-link">Wkrótce →</span>
+    </article>
+    <article class="blog-card">
+      <span class="card-tag green">[ B2B Polska ]</span>
+      <h3>Dlaczego handlowcy tracą 18 minut na każde wyszukiwanie</h3>
+      <p class="blog-card-body">Badanie kosztów ukrytych w polskich firmach dystrybucyjnych i jak je wyeliminować.</p>
+      <span class="blog-link">Wkrótce →</span>
+    </article>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-upper">
+    <div>
+      <span class="foot-brand">COMPILORE</span>
+      <p class="foot-tag">AI-powered baza wiedzy dla polskich firm B2B.<br>Zarządzanie wiedzą. Wdrożenie AI. Natychmiastowy ROI.</p>
+      <a href="/cdn-cgi/l/email-protection#d6b4b7a4a2b3bd96beb3b7b2b0a4b7bbb3f8a6ba" class="foot-email"><span class="__cf_email__" data-cfemail="c7a5a6b5b3a2ac87afa2a6a3a1b5a6aaa2e9b7ab">[email&#160;protected]</span></a>
+    </div>
+    <div>
+      <span class="foot-col-label">NAWIGACJA</span>
+      <a href="#problem" class="foot-link">Problem</a>
+      <a href="#how" class="foot-link">Jak działa</a>
+      <a href="#forwhom" class="foot-link">Dla kogo</a>
+      <a href="#waitlist" class="foot-link">Dołącz do pilotu</a>
+      <a href="#blog" class="foot-link">Baza wiedzy</a>
+    </div>
+    <div>
+      <span class="foot-col-label">INFORMACJE</span>
+      <a href="#privacy" class="foot-link" id="privacy-trigger">Polityka prywatności</a>
+      <a href="https://app.compilore.pl" class="foot-link">Zaloguj się ↗</a>
+      <span class="foot-static">Serwery EU · Hetzner DE</span>
+    </div>
+  </div>
+  <div class="footer-lower">
+    <span class="foot-meta">© 2026 HEADFRAME SP. Z O.O. · NIP: 8971969073 · KRS: 0001227801</span>
+    <span class="foot-meta dim">STANISŁAWA LESZCZYŃSKIEGO 4/77 · 50-078 WROCŁAW</span>
+    <span class="foot-meta">COMPILORE.PL · SERWERY EU · RODO</span>
+  </div>
+</footer>
+
+<!-- PRIVACY MODAL -->
+<div class="modal-overlay" id="privacy-modal" role="dialog" aria-modal="true" aria-labelledby="privacy-title">
+  <div class="modal">
+    <button class="modal-close" id="privacy-close" aria-label="Zamknij">×</button>
+    <div id="privacy-policy-content">
+      <h2 id="privacy-title">Polityka prywatności</h2>
+
+      <h3>Administrator danych</h3>
+      <p>HEADFRAME SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ<br>NIP: 8971969073 · KRS: 0001227801<br>Stanisława Leszczyńskiego 4/77, 50-078 Wrocław, Polska</p>
+
+      <h3>Kontakt</h3>
+      <p>W sprawach związanych z przetwarzaniem danych osobowych: <a href="/cdn-cgi/l/email-protection#e587849791808ea58d8084818397848880cb9589" style="color:#10B981;text-decoration:none"><span class="__cf_email__" data-cfemail="d9bbb8abadbcb299b1bcb8bdbfabb8b4bcf7a9b5">[email&#160;protected]</span></a></p>
+
+      <h3>Cel przetwarzania</h3>
+      <p>Dane podane w formularzu kontaktowym są przetwarzane wyłącznie w celu obsługi zgłoszenia, kontaktu w sprawie pilotu programu Compilore oraz prowadzenia korespondencji handlowej.</p>
+
+      <h3>Podstawa prawna</h3>
+      <p>Art. 6 ust. 1 lit. a RODO — zgoda osoby, której dane dotyczą, wyrażona poprzez przesłanie formularza.</p>
+
+      <h3>Okres przechowywania</h3>
+      <p>Dane są przechowywane do czasu cofnięcia zgody przez użytkownika lub zakończenia współpracy. Po tym okresie dane są niezwłocznie usuwane.</p>
+
+      <h3>Prawa użytkownika</h3>
+      <ul>
+        <li>Prawo dostępu do swoich danych</li>
+        <li>Prawo do sprostowania danych</li>
+        <li>Prawo do usunięcia danych („prawo do bycia zapomnianym")</li>
+        <li>Prawo do przenoszenia danych</li>
+        <li>Prawo do wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych</li>
+      </ul>
+
+      <h3>Lokalizacja serwerów</h3>
+      <p>Dane są przechowywane wyłącznie na serwerach zlokalizowanych na terenie Unii Europejskiej (Hetzner, Niemcy). Dane nie są przekazywane do państw trzecich.</p>
+
+      <h3>Profilowanie automatyczne</h3>
+      <p>Compilore nie podejmuje decyzji opartych wyłącznie o zautomatyzowane przetwarzanie danych, w tym profilowanie, które wywoływałoby skutki prawne wobec użytkownika.</p>
+    </div>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ===== Interactive grid canvas =====
+(function(){
+  const canvas = document.getElementById('bgCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const CELL = 36;
+  const GREEN = '16,185,129';
+  let mx = -9999, my = -9999;
+  function resize(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  window.addEventListener('mousemove', function(e){
+    mx = e.clientX;
+    my = e.clientY;
+  });
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    const cols = Math.ceil(canvas.width/CELL)+1;
+    const rows = Math.ceil(canvas.height/CELL)+1;
+    for(let r=0;r<=rows;r++){
+      for(let c=0;c<=cols;c++){
+        const x=c*CELL, y=r*CELL;
+        const dist=Math.hypot(x-mx,y-my);
+        const MAX=180;
+        if(dist<MAX){
+          const t=1-dist/MAX;
+          ctx.beginPath();
+          ctx.arc(x,y,1.5+t*1.5,0,Math.PI*2);
+          ctx.fillStyle='rgba('+GREEN+','+(0.08+t*0.35)+')';
+          ctx.fill();
+          if(t>0.3){
+            ctx.strokeStyle='rgba('+GREEN+','+(t*0.08)+')';
+            ctx.lineWidth=0.5;
+            ctx.strokeRect(x,y,CELL,CELL);
+          }
+        } else {
+          ctx.beginPath();
+          ctx.arc(x,y,0.5,0,Math.PI*2);
+          ctx.fillStyle='rgba(255,255,255,0.035)';
+          ctx.fill();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ===== AI compare observer =====
+(function(){
+  const comp = document.querySelector('.ai-compare');
+  if(!comp) return;
+  const obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){comp.classList.add('visible');obs.disconnect();}
+    });
+  },{threshold:0.3});
+  obs.observe(comp);
+})();
+
+// ===== Nav scroll background =====
+const nav = document.getElementById('nav');
+function onScroll(){
+  if(window.scrollY > 64) nav.classList.add('scrolled');
+  else nav.classList.remove('scrolled');
+}
+window.addEventListener('scroll', onScroll, {passive:true});
+onScroll();
+
+// ===== Active section observer =====
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-link');
+const depthLinks = document.querySelectorAll('.depth a');
+
+const activeObs = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      const id = entry.target.id;
+      navLinks.forEach(l=>l.classList.toggle('active', l.dataset.section === id));
+      depthLinks.forEach(l=>l.classList.toggle('active', l.dataset.section === id));
+    }
+  });
+}, {threshold:0.4});
+sections.forEach(s=>activeObs.observe(s));
+
+// ===== Fade-in =====
+const fadeObs = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('visible');
+      fadeObs.unobserve(entry.target);
+    }
+  });
+}, {threshold:0.15});
+document.querySelectorAll('.fade-in').forEach(el=>fadeObs.observe(el));
+// Hero visible immediately
+document.getElementById('hero').classList.add('visible');
+
+// ===== Metrics count-up =====
+function easeOutCubic(t){return 1 - Math.pow(1 - t, 3);}
+function animateNumber(el){
+  const target = parseFloat(el.dataset.target);
+  const suffix = el.dataset.suffix || '';
+  const duration = 1500;
+  const start = performance.now();
+  function tick(now){
+    const elapsed = now - start;
+    const t = Math.min(elapsed / duration, 1);
+    const eased = easeOutCubic(t);
+    const value = Math.round(target * eased);
+    el.textContent = value + suffix;
+    if(t < 1) requestAnimationFrame(tick);
+    else el.textContent = target + suffix;
+  }
+  requestAnimationFrame(tick);
+}
+const metricObs = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.querySelectorAll('.metric-num').forEach(animateNumber);
+      metricObs.unobserve(entry.target);
+    }
+  });
+}, {threshold:0.5});
+const metricsEl = document.getElementById('metrics');
+if(metricsEl) metricObs.observe(metricsEl);
+
+// ===== Form submit =====
+const form = document.getElementById('pilot-form');
+const formContainer = document.getElementById('form-container');
+form.addEventListener('submit', (e)=>{
+  e.preventDefault();
+  formContainer.innerHTML = `
+    <div class="form-success">
+      <h3>Zgłoszenie przyjęte.</h3>
+      <p>Odezwiemy się w ciągu 24 godzin na podany adres email.</p>
+    </div>
+  `;
+});
+
+// ===== Privacy modal =====
+const privacyTrigger = document.getElementById('privacy-trigger');
+const privacyModal = document.getElementById('privacy-modal');
+const privacyClose = document.getElementById('privacy-close');
+privacyTrigger.addEventListener('click', (e)=>{
+  e.preventDefault();
+  privacyModal.classList.add('open');
+  document.body.style.overflow='hidden';
+});
+function closePrivacy(){
+  privacyModal.classList.remove('open');
+  document.body.style.overflow='';
+}
+privacyClose.addEventListener('click', closePrivacy);
+privacyModal.addEventListener('click', (e)=>{
+  if(e.target === privacyModal) closePrivacy();
+});
+document.addEventListener('keydown',(e)=>{
+  if(e.key==='Escape' && privacyModal.classList.contains('open')) closePrivacy();
+});
+</script>
+</body>
+</html>
