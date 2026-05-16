@@ -1345,10 +1345,9 @@ p, li { text-wrap: pretty; }
 <canvas id="bgCanvas" aria-hidden="true"></canvas>
 <div class="shaft" aria-hidden="true"></div>
 
-<!-- C5: HUD CORNER ELEMENTS -->
-<div class="hud-hide-mobile" aria-hidden="true" style="position:fixed;top:80px;left:80px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--hf-text-mono);text-transform:uppercase;letter-spacing:0.1em;pointer-events:none;z-index:25;line-height:1.8;">[ SHAFT: COMPILORE ]<br>[ STATUS: PILOT ]</div>
-<div class="hud-hide-mobile" aria-hidden="true" style="position:fixed;bottom:24px;left:80px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--hf-text-mono);text-transform:uppercase;letter-spacing:0.1em;pointer-events:none;z-index:25;">N 51.107&deg; E 17.038&deg; | DEPTH: 000.00m</div>
-<div class="hud-hide-mobile" aria-hidden="true" style="position:fixed;bottom:24px;right:24px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--hf-text-mono);text-transform:uppercase;letter-spacing:0.1em;pointer-events:none;z-index:25;text-align:right;">[ ROOT: HEADFRAME ]<br>[ 0 HALLUCINATIONS SHIPPED ]</div>
+<!-- C5: HUD — bottom corners (viewport-fixed); shaft status lives in #hero -->
+<div class="hud-hide-mobile" aria-hidden="true" style="position:fixed;bottom:24px;left:16px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--hf-text-mono);text-transform:uppercase;letter-spacing:0.1em;pointer-events:none;z-index:25;opacity:0.35;">N 51.107&deg; E 17.038&deg; | DEPTH: 000.00m</div>
+<div class="hud-hide-mobile" aria-hidden="true" style="position:fixed;bottom:24px;right:24px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--hf-text-mono);text-transform:uppercase;letter-spacing:0.1em;pointer-events:none;z-index:25;text-align:right;opacity:0.35;">[ ROOT: HEADFRAME ]<br>[ 0 HALLUCINATIONS SHIPPED ]</div>
 
 <nav class="nav" id="nav" aria-label="Główna nawigacja" data-screen-label="00 Nav">
   <div class="nav-left">
@@ -1381,6 +1380,7 @@ p, li { text-wrap: pretty; }
 
 <!-- HERO -->
 <section id="hero" class="hero fade-in" data-screen-label="01 Hero">
+  <div class="hud-hide-mobile" aria-hidden="true" style="position:absolute;top:80px;left:80px;opacity:0.4;pointer-events:none;z-index:2;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--hf-text-mono);text-transform:uppercase;letter-spacing:0.1em;line-height:1.8;">[ SHAFT: COMPILORE ]<br>[ STATUS: PILOT ]</div>
   <div class="scan-line"></div>
   <div class="hero-status">
     <span class="tag green"><span class="led"></span>System aktywny</span>
